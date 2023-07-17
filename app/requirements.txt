@@ -1,0 +1,23 @@
+Django==4.2.3
+Jinja2==3.1.2
+psycopg2-binary
+django-bootstrap5
+django_bootstrap_icons
+gunicorn
+uvicorn[standard]
+django-filter
+#watchgod
+#Werkzeug
+# django-debug-toolbar  # https://github.com/jazzband/django-debug-toolbar
+# django-extensions # https://github.com/django-extensions/django-extensions
+django_components
+django-watson
+django-pghistory
+django-pgtrigger
+django-role-permissions
+django-debug-toolbar
+django-crispy-forms
+crispy-bootstrap5
+django-allauth
+django-select2
+django-environ
