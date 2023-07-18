@@ -8,10 +8,10 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-RUN <<EOF
-apt-get update
-apt-get install -y --no-install-recommends gettext
-EOF
+# RUN <<EOF
+# apt-get update
+# apt-get install -y --no-install-recommends gettext
+# EOF
 
 RUN python -m pip install --upgrade pip
 

@@ -21,3 +21,4 @@ crispy-bootstrap5
 django-allauth
 django-select2
 django-environ
+Pillow
