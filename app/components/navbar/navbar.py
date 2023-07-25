@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 @component.register("navbar")
-class Calendar(component.Component):
+class Navbar(component.Component):
     template_name = "navbar/navbar.html"
 
     def get_context_data(self, user):

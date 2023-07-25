@@ -27,6 +27,8 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path("test/", TemplateView.as_view(template_name="test.html")),
 
+    path('', include('core.urls')),
+
 ]
 if settings.DEBUG:
     urlpatterns += [

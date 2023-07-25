@@ -1,9 +1,9 @@
 from django.utils.translation import gettext_lazy as _
 
 labels_data = {
-    'HomeLabel': _('Каталог ЭОР'),
-    'MyEOR': _('Мои ЭОР'),
-    'MyRequests': _('Мои заявки'),
+    'HomeLabel': _('Каталог'),
+    'MyEORLabel': _('Мои ЭОР'),
+    'MyRequestsLabel': _('Мои заявки'),
     'MainTitle': _('Каталог ЭОР'),
 }
 

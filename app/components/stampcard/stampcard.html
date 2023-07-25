@@ -1,0 +1,23 @@
+<div class="card mt-4 text-bg-success">
+    <div class="card-header">
+        <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1">{{pas.stamp_type}}</h5>
+            <small class="text-light">{{pas.stamp_before_date}}</small>
+        </div>
+        <small>{{pas.stamp_text}}</small>
+    </div>
+    <ul class="list-group list-group-flush">
+        {% for stamp_subject in pas.stamp_subjects %}
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between">
+                    <h6>{{stamp_subject.subject}}</h6>
+                    <small class="text-muted ps-3">{{stamp_subject.percentage}}</small>
+                </div>
+                <small>{{stamp_subject.direction}}</small>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="card-footer text-center">
+        <br>
+    </div>
+</div>
