@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags bootstrap_icons %}
+{% load tz %}
+
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb px-3 pb-0">
+      <li class="breadcrumb-item"><a href="/">{% md_icon "bank-outline" %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'users:detail' user.username %}">Профиль</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Редактирование</li>
+    </ol>
+  </nav>
+
+  {% localtime on %}
+    <div class="container mt-5">
+      {% if user.full_name %}
+        <h2 class="font-weight-light mt-4">{{ user.full_name }}</h2>
+      {% else %}
+        <h2 class="font-weight-light mt-4">{{ user.username }}</h2>
+      {% endif %}
+
+      <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url 'users:update' %}">
+        {% csrf_token %}
+        {% crispy form %}
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-primary px-3">Сохранить</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <script>
+      $('#standard_calendar').calendar({
+        monthFirst: false,
+        type: 'date',
+        text: {
+          days: ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'],
+          months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+          monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+          today: 'Сегодня',
+          now: 'Сейчас',
+        },
+        formatter: {
+          date: function (date, settings) {
+            if (!date) return '';
+            return date.toISOString()
+          }
+        }
+      });
+    </script>
+  {% endlocaltime %}
+{% endblock %}

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,8 +27,8 @@ SECRET_KEY = 'django-insecure-4lmju79-u%v@rqp#b6p&$k&xw1cp_g+*&_e5xoqndn-da59ip8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', 'http://localhost:8088']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8088', 'http://127.0.0.1']
 if DEBUG:
     import socket  # only if you haven't already imported this
 
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
     'django_bootstrap5',
+    'django_bootstrap_icons',
     'watson',
     'pghistory',
     'pgtrigger',
@@ -231,3 +233,5 @@ AUTHENTICATION_BACKENDS = [
 AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = 'users:redirect'
 LOGIN_URL = 'account_login'
+CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap5',)
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
