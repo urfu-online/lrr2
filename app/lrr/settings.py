@@ -121,12 +121,9 @@ WSGI_APPLICATION = 'lrr.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = {'default': env.db('DATABASE_URL')}
+DATABASES['default']['ATOMIC_REQUESTS'] = True
+DATABASES['default']['CONN_MAX_AGE'] = 120
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -174,9 +171,9 @@ LOGGING = {
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Yekaterinburg'
 
 USE_I18N = True
 
@@ -215,14 +212,22 @@ ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
-ACCOUNT_ADAPTER = 'lrr.users.adapters.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'lrr.users.adapters.SocialAccountAdapter'
+ACCOUNT_ADAPTER = 'users.adapters.AccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'users.adapters.SocialAccountAdapter'
 DEFAULT_FORMFIELD_CLASSES = 'mt-4 shadow-sm bg-white border border-secondary'
 # ACCOUNT_FORMS = {'signup': 'lrr.users.forms.UserSignupForm'}
 ACCOUNT_FORMS = {
-    'login': 'lrr.forms.DETLoginForm',
-    'reset_password': 'lrr.forms.DETResetPasswordForm',
-    'add_email': 'lrr.forms.DETAddEmailForm',
-    'change_password': 'lrr.forms.DETChangePasswordForm',
-    'signup': 'lrr.users.forms.UserSignupForm',
+    'login': 'users.forms.DETLoginForm',
+    'reset_password': 'users.forms.DETResetPasswordForm',
+    'add_email': 'users.forms.DETAddEmailForm',
+    'change_password': 'users.forms.DETChangePasswordForm',
+    'signup': 'users.forms.UserSignupForm',
 }
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = 'users:redirect'
+LOGIN_URL = 'account_login'
