@@ -163,7 +163,7 @@ class Rightholder(models.Model):
         pass
 
     def __str__(self):
-        return str(self.pk)
+        return f"{self.pk}"
 
     def get_absolute_url(self):
         return reverse("core_Rightholder_detail", args=(self.pk,))
