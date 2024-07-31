@@ -1,18 +1,20 @@
 {% load static %}
 <div class="col col-auto mb-3">
     <div class="card h-100" style="width: 18rem;">
-        <div class="card-header">
-            {{res.type}}
-        </div>
+        <div class="card-header">{{ res.type }}</div>
         <div class="card-body">
-            <h5 class="card-title">{{res.title}}</h5>
-            <p class="card-text">{{res.descr}}</p>
+            <h5 class="card-title">{{ res.title }}</h5>
+            <p class="card-text">{{ res.descr }}</p>
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex">
-                <img src="{% static res.platform_logo %}" alt="Logo" width="22" height="22" class="align-text-top me-1">
-                {{res.platform_name}}
-                <a href="{{res.url}}" class="card-link ms-auto">Открыть</a>
+                <img src="{% static res.platform_logo %}"
+                     alt="Logo"
+                     width="22"
+                     height="22"
+                     class="align-text-top me-1">
+                {{ res.platform_name }}
+                <a href="{{ res.url }}" class="card-link ms-auto">Открыть</a>
             </li>
         </ul>
         <div class="card-footer text-center">

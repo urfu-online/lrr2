@@ -74,26 +74,58 @@ class Platform(models.Model):
 
 class Passport(models.Model):
 
-    directions = models.ManyToManyField("core.Direction", verbose_name="Направления подготовки, для использования в рамках которых предназначен ЭОР", blank=True)
-    rightholder = models.ForeignKey("core.Rightholder", verbose_name="Правообладатель ЭОР", on_delete=models.PROTECT)
+    directions = models.ManyToManyField(
+        "core.Direction",
+        verbose_name="Направления подготовки, для использования в рамках которых предназначен ЭОР",
+        blank=True,
+    )
+    rightholder = models.ForeignKey(
+        "core.Rightholder", verbose_name="Правообладатель ЭОР", on_delete=models.PROTECT
+    )
     # competences = models.ManyToManyField("core.Competence", verbose_name="Перечень компетенций, в формировании которых участвует ЭОР", blank=True)
-    department = models.ForeignKey("core.Department", verbose_name="Подразделение-держатель ЭОР и контактные данные ответственного лица", on_delete=models.PROTECT)
-    subjects = models.ManyToManyField("core.Subject", verbose_name="Дисциплины (модули), для использования в рамках которых предназначен ЭОР", blank=True)
-    platform = models.ForeignKey("core.Platform", verbose_name="Платформа размещения ЭОР", on_delete=models.PROTECT)
-    language = models.ForeignKey("core.Language", verbose_name="Язык контента ЭОР", on_delete=models.PROTECT)
+    department = models.ForeignKey(
+        "core.Department",
+        verbose_name="Подразделение-держатель ЭОР и контактные данные ответственного лица",
+        on_delete=models.PROTECT,
+    )
+    subjects = models.ManyToManyField(
+        "core.Subject",
+        verbose_name="Дисциплины (модули), для использования в рамках которых предназначен ЭОР",
+        blank=True,
+    )
+    platform = models.ForeignKey(
+        "core.Platform",
+        verbose_name="Платформа размещения ЭОР",
+        on_delete=models.PROTECT,
+    )
+    language = models.ForeignKey(
+        "core.Language", verbose_name="Язык контента ЭОР", on_delete=models.PROTECT
+    )
 
     requirements = models.TextField("Минимальные системные требования")
     target = models.TextField("Целевая аудитория ЭОР")
-    description = models.TextField("Аннотация ЭОР", blank=True, default='')
-    structure = postgres_fields.ArrayField(models.TextField(), verbose_name="Перчень разделов (тем) ЭОР",)
-    interactive = models.CharField("Наличие в ЭОР интерактивных компонентов и степень их автоматизации", max_length=30)
+    description = models.TextField("Аннотация ЭОР", blank=True, default="")
+    structure = postgres_fields.ArrayField(
+        models.TextField(),
+        verbose_name="Перчень разделов (тем) ЭОР",
+    )
+    interactive = models.CharField(
+        "Наличие в ЭОР интерактивных компонентов и степень их автоматизации",
+        max_length=30,
+    )
     prerequisites = models.TextField("Пререквизиты ЭОР")
     type = models.CharField("Вид ЭОР", max_length=4)
-    results = postgres_fields.ArrayField(models.CharField(max_length=100), verbose_name="Результаты освоение ЭОР")
+    results = postgres_fields.ArrayField(
+        models.CharField(max_length=100), verbose_name="Результаты освоение ЭОР"
+    )
     title = models.TextField("Наименование ЭОР")
-    keywords = postgres_fields.ArrayField( models.CharField(max_length=100), verbose_name="Ключевые слова")
+    keywords = postgres_fields.ArrayField(
+        models.CharField(max_length=100), verbose_name="Ключевые слова"
+    )
     credits = models.PositiveSmallIntegerField("Трудоемкость освоения ЭОР")
-    authors = postgres_fields.ArrayField(models.CharField(max_length=100), verbose_name="Авторы ЭОР")
+    authors = postgres_fields.ArrayField(
+        models.CharField(max_length=100), verbose_name="Авторы ЭОР"
+    )
 
     class Meta:
         pass
@@ -161,7 +193,7 @@ class StampSubject(models.Model):
 
 
 class Competence(models.Model):
-     # Это справочник?
+    # Это справочник?
 
     stamp_subjects = models.ManyToManyField("core.StampSubject")
     passport = models.ForeignKey("core.Passport", on_delete=models.CASCADE)

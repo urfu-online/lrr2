@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-
-{% block title %}{{ user.username }}{% endblock %}
-
+{% block title %}
+  {{ user.username }}
+{% endblock title %}
 {% block content %}
   <div class="ui vertical stripe segment">
     <div class="ui middle aligned raised grid container">
       <h1>{{ user.username }}</h1>
-      <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url 'users:update' %}">
+      <form class="form-horizontal"
+            method="post"
+            enctype="multipart/form-data"
+            action="{% url 'users:update' %}">
         {% csrf_token %}
         {{ form|crispy }}
         <div class="control-group">
@@ -18,4 +21,4 @@
       </form>
     </div>
   </div>
-{% endblock %}
+{% endblock content %}

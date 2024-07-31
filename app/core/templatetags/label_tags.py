@@ -6,5 +6,5 @@ register = template.Library()
 
 
 @register.simple_tag
-def get_label(name):
+def get_label(name) -> str:
     return get_label_util(name)
