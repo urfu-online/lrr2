@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load component_tags %}
 {% block content %}
-   {% component "navbar" user=user %}
-   {% component "breadcrumbs" bcs=breadcrumbs %}
-   <div class="container-fluid mt-3">
+    {% component "navbar" user=user %}{% endcomponent %}
+    {% component "breadcrumbs" bcs=breadcrumbs %}{% endcomponent %}
+    <div class="container-fluid mt-3">
         <div class="row justify-content-center">
             {% for passport in passports %}
-                {% component "resourcecard" res=passport%}
+                {% component "resourcecard" res=passport %}{% endcomponent %}
+                
             {% endfor %}
         </div>
     </div>
-
-{% endblock %}
+{% endblock content %}

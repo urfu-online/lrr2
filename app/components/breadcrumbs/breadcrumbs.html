@@ -3,12 +3,13 @@
         <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb mt-2">
                 {% for bc in bcs %}
-                    <li class="breadcrumb-item {% if bc.active %}active fw-bold{% endif %}" aria-current="page">
-                    {% if bc.url %}
-                        <a href="{{ bc.url }}">{{ bc.name }}</a>
-                    {% else %}
-                        {{ bc.name }}
-                    {% endif %}
+                    <li class="breadcrumb-item {% if bc.active %}active fw-bold{% endif %}"
+                        aria-current="page">
+                        {% if bc.url %}
+                            <a href="{{ bc.url }}">{{ bc.name }}</a>
+                        {% else %}
+                            {{ bc.name }}
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ol>

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static bootstrap_icons %}
+{% block title %}User: {{ object.username }}{% endblock %}
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb px-3 pb-0">
+      <li class="breadcrumb-item">
+        <a href="/">{% md_icon "bank-outline" %}</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Профиль</li>
+    </ol>
+  </nav>
+  <header>
+    <h1 class="display-3">Профиль</h1>
+  </header>
+  <div class="row">
+    <div class="row">
+      <div class="col-8">
+        <div class="row">
+          <div class="col-sm-4 p-2">Имя пользователя:</div>
+          <div class="col p-2">
+            <p>{{ object.username }}</p>
+          </div>
+          <div class="w-100"></div>
+          <div class="col-sm-4 p-2">ФИО:</div>
+          <div class="col p-2">
+            <p>{{ person.full_name_display }}</p>
+          </div>
+          <div class="w-100"></div>
+          <div class="col-sm-4 p-2">Страна:</div>
+          <div class="col p-2">
+            <p>
+              {% if person.country %}
+                {{ person.country }}
+              {% else %}
+                <em>Не задана</em>
+              {% endif %}
+            </p>
+          </div>
+          <div class="w-100"></div>
+          <div class="col-sm-4 p-2">Город:</div>
+          <div class="col p-2">
+            <p>
+              {% if person.city %}
+                {{ person.city }}
+              {% else %}
+                <em>Не задан</em>
+              {% endif %}
+            </p>
+          </div>
+          <div class="w-100"></div>
+          <div class="col-sm-4 p-2">Адрес проживания:</div>
+          <div class="col p-2">
+            <p>
+              {% if person.location %}
+                {{ person.location }}
+              {% else %}
+                <em>Не задан</em>
+              {% endif %}
+            </p>
+          </div>
+          <div class="w-100"></div>
+          <div class="col-sm-4 p-2">Дата рождения:</div>
+          <div class="col p-2">
+            <p>
+              {% if person.date_birthday %}
+                {{ person.date_birthday }}
+              {% else %}
+                <em>Не задан</em>
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        {% if person.avatar %}
+          <img src='/media/{{ person.avatar }}'
+               class="ui large bordered rounded image">
+        {% else %}
+          <figure class="figure">
+            <img src="{% static 'images/avatar_placeholder.png' %}"
+                 class="figure-img img-fluid rounded">
+            <figcaption class="figure-caption text-center">Нет аватара</figcaption>
+          </figure>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% if object == request.user %}
+    <div class="row">
+      <div class="left aligned column">
+        <a class="btn btn-primary" href="{% url 'users:update' %}" role="button">Редактировать</a>
+        <a class="btn btn-primary"
+           href="{% url 'account_email' %}"
+           role="button">Сменить E-Mail</a>
+      </div>
+    </div>
+  {% endif %}
+{% endblock content %}
