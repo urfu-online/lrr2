@@ -1,6 +1,6 @@
 # LRR
 
-- docker-compose up # запуск в консоли
+- `docker-compose up` # запуск в консоли
 - docker-compose up -d # запуск как службы
 - docker-compose stop
 - docker-compose up -d --build # запуск в фоне с ребилдом
