@@ -1,254 +1,305 @@
-from django.contrib.postgres import fields as postgres_fields
 from django.db import models
-from django.urls import reverse
 
 
 class Direction(models.Model):
-    title = models.CharField("Наименование", max_length=30)
-    code = models.CharField("Код", max_length=8)
-
-    class Meta:
-        pass
+    DEGREES_CHOICES = (
+        ("бакалавриат", "бакалавриат"),
+        ("специалитет", "специалитет"),
+        ("магистратура", "магистратура"),
+        ("аспирантура", "аспирантура"),
+    )
+    code = models.CharField("Код направления подготовки", max_length=8, blank=True, null=True)
+    name = models.CharField("Наименование направления подготовки", max_length=255)
+    degree = models.CharField("Уровень образования направления подготовки", max_length=12, choices=DEGREES_CHOICES)
 
     def __str__(self):
-        return str(self.pk)
+        return (self.code + " " + self.name + " (" + self.degree + ")").strip()
 
-    def get_absolute_url(self):
-        return reverse("core_Direction_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_Direction_update", args=(self.pk,))
+    class Meta:
+        verbose_name = "Направление подготовки"
+        verbose_name_plural = "Направления подготовки"
 
 
 class Department(models.Model):
-    title = models.TextField()
-    contacts = models.TextField("Контактные данные ответственного лица")
-
-    class Meta:
-        pass
+    name = models.CharField("Наименование подразделения", max_length=255)
 
     def __str__(self):
-        return str(self.pk)
+        return self.name
 
-    def get_absolute_url(self):
-        return reverse("core_Department_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_Department_update", args=(self.pk,))
+    class Meta:
+        verbose_name = "Подразделение"
+        verbose_name_plural = "Подразделения"
 
 
 class Language(models.Model):
-    title = models.CharField(max_length=30)
-    code = models.CharField(max_length=5)
-
-    class Meta:
-        pass
+    name = models.CharField("Наименование языка", max_length=30)
 
     def __str__(self):
-        return str(self.pk)
+        return self.name
 
-    def get_absolute_url(self):
-        return reverse("core_Language_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_Language_update", args=(self.pk,))
+    class Meta:
+        verbose_name = "Язык"
+        verbose_name_plural = "Языки"
 
 
 class Platform(models.Model):
-    title = models.CharField(max_length=255)
-    url = models.URLField()
-    logo = models.ImageField(upload_to="upload/images/platform_logo")
-
-    class Meta:
-        pass
+    name = models.CharField("Наименование платформы", max_length=255)
+    url = models.URLField("URL платформы")
+    logo = models.ImageField("Логотип платформы", upload_to="upload/images/platform_logo")
 
     def __str__(self):
-        return str(self.pk)
-
-    def get_absolute_url(self):
-        return reverse("core_Platform_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_Platform_update", args=(self.pk,))
-
-
-class Passport(models.Model):
-
-    directions = models.ManyToManyField(
-        "core.Direction",
-        verbose_name="Направления подготовки, для использования в рамках которых предназначен ЭОР",
-        blank=True,
-    )
-    rightholder = models.ForeignKey(
-        "core.Rightholder", verbose_name="Правообладатель ЭОР", on_delete=models.PROTECT
-    )
-    # competences = models.ManyToManyField("core.Competence", verbose_name="Перечень компетенций, в формировании которых участвует ЭОР", blank=True)
-    department = models.ForeignKey(
-        "core.Department",
-        verbose_name="Подразделение-держатель ЭОР и контактные данные ответственного лица",
-        on_delete=models.PROTECT,
-    )
-    subjects = models.ManyToManyField(
-        "core.Subject",
-        verbose_name="Дисциплины (модули), для использования в рамках которых предназначен ЭОР",
-        blank=True,
-    )
-    platform = models.ForeignKey(
-        "core.Platform",
-        verbose_name="Платформа размещения ЭОР",
-        on_delete=models.PROTECT,
-    )
-    language = models.ForeignKey(
-        "core.Language", verbose_name="Язык контента ЭОР", on_delete=models.PROTECT
-    )
-
-    requirements = models.TextField("Минимальные системные требования")
-    target = models.TextField("Целевая аудитория ЭОР")
-    description = models.TextField("Аннотация ЭОР", blank=True, default="")
-    structure = postgres_fields.ArrayField(
-        models.TextField(),
-        verbose_name="Перчень разделов (тем) ЭОР",
-    )
-    interactive = models.CharField(
-        "Наличие в ЭОР интерактивных компонентов и степень их автоматизации",
-        max_length=30,
-    )
-    prerequisites = models.TextField("Пререквизиты ЭОР")
-    type = models.CharField("Вид ЭОР", max_length=4)
-    results = postgres_fields.ArrayField(
-        models.CharField(max_length=100), verbose_name="Результаты освоение ЭОР"
-    )
-    title = models.TextField("Наименование ЭОР")
-    keywords = postgres_fields.ArrayField(
-        models.CharField(max_length=100), verbose_name="Ключевые слова"
-    )
-    credits = models.PositiveSmallIntegerField("Трудоемкость освоения ЭОР")
-    authors = postgres_fields.ArrayField(
-        models.CharField(max_length=100), verbose_name="Авторы ЭОР"
-    )
+        return self.name
 
     class Meta:
-        pass
-
-    def __str__(self):
-        return str(self.pk)
-
-    def get_absolute_url(self):
-        return reverse("core_Passport_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_Passport_update", args=(self.pk,))
+        verbose_name = "Платформа"
+        verbose_name_plural = "Платформы"
 
 
 class Subject(models.Model):
-    title = models.CharField("Наименование", max_length=255, db_index=True)
-
-    class Meta:
-        pass
+    name = models.CharField("Наименование дисциплины", max_length=255)
 
     def __str__(self):
-        return str(self.pk)
+        return self.name
 
-    def get_absolute_url(self):
-        return reverse("core_Subject_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_Subject_update", args=(self.pk,))
+    class Meta:
+        verbose_name = "Дисциплина"
+        verbose_name_plural = "Дисциплины"
 
 
 class Rightholder(models.Model):
-    title = models.CharField(max_length=512)
-
-    class Meta:
-        pass
+    name = models.CharField("Наименование правообладателя", max_length=255)
 
     def __str__(self):
-        return f"{self.pk}"
-
-    def get_absolute_url(self):
-        return reverse("core_Rightholder_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_Rightholder_update", args=(self.pk,))
-
-
-class StampSubject(models.Model):
-
-    subject = models.ForeignKey("core.Subject", on_delete=models.PROTECT)
-    direction = models.ForeignKey("core.Direction", on_delete=models.PROTECT)
-
-    percentage = models.PositiveSmallIntegerField(default=0)
+        return self.name
 
     class Meta:
-        pass
+        verbose_name = "Правообладатель"
+        verbose_name_plural = "Правообладатели"
+
+
+class Resource(models.Model):
+    resource_code = models.CharField("Код ЭОР", max_length=8, unique=True)
+    TYPE_CHOICES = (
+        ("Электронный образовательный контент", "Электронный образовательный контент"),
+        ("Электронный учебный курс", "Электронный учебный курс"),
+        ("Онлайн-курс", "Онлайн-курс"),
+    )
+    type = models.CharField("Вид ЭОР", max_length=35, choices=TYPE_CHOICES)
+    title = models.TextField("Наименование ЭОР")
+    authors_text = models.TextField("Авторы ЭОР")
+    description = models.TextField("Аннотация ЭОР")
+    prerequisites = models.TextField("Пререквизиты ЭОР", blank=True, null=True)
+    target = models.TextField("Целевая аудитория ЭОР", blank=True, null=True)
+    directions = models.ManyToManyField(
+        Direction,
+        verbose_name="Направления подготовки, для использования в рамках которых предназначен ЭОР",
+        blank=True,
+        null=True
+    )
+    subjects = models.ManyToManyField(
+        Subject,
+        verbose_name="Дисциплины (модули), для использования в рамках которых предназначен ЭОР",
+        blank=True,
+        null=True
+    )
+    structure = models.TextField("Перчень разделов (тем) ЭОР", blank=True, null=True)
+    INTERACTIVE_CHOICES = (
+        ("Все интерактивные компоненты автоматизированы", "Все интерактивные компоненты автоматизированы"),
+        ("Некоторые интерактивные компоненты требуют участия преподавателя", "Некоторые интерактивные компоненты требуют участия преподавателя"),
+        ("Интерактивные компоненты отсутствуют", "Интерактивные компоненты отсутствуют"),
+    )
+    interactive = models.CharField(
+        "Наличие в ЭОР интерактивных компонентов и степень их автоматизации",
+        max_length=64,
+        choices=INTERACTIVE_CHOICES
+    )
+    keywords = models.TextField("Ключевые слова", blank=True, null=True)
+    results = models.TextField("Результаты освоения ЭОР", blank=True, null=True)
+    credits = models.PositiveSmallIntegerField("Трудоемкость освоения ЭОР", blank=True, null=True)
+    language = models.ForeignKey(
+        Language, verbose_name="Язык контента ЭОР", on_delete=models.PROTECT, blank=True, null=True
+    )
+    requirements = models.TextField("Минимальные системные требования", blank=True, null=True)
+    rightholder = models.ForeignKey(
+        Rightholder, verbose_name="Правообладатель ЭОР", on_delete=models.PROTECT
+    )
+    department = models.ForeignKey(
+        Department,
+        verbose_name="Подразделение-держатель ЭОР",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True
+    )
+    contacts = models.TextField("Контактные данные ответственного лица", blank=True, null=True)
+    platform = models.ForeignKey(
+        Platform,
+        verbose_name="Платформа размещения ЭОР",
+        on_delete=models.PROTECT
+    )
+    ACCESS_MODE_CHOICES = (
+        ("анонимный, открытый", "анонимный, открытый"),
+        ("анонимный, ограниченный (прямой ссылкой)", "анонимный, ограниченный (прямой ссылкой)"),
+        ("с аутентификацией пользователя, с открытой регистрацией", "с аутентификацией пользователя, с открытой регистрацией"),
+        ("с аутентификацией пользователя, с ограниченным доступом", "с аутентификацией пользователя, с ограниченным доступом"),
+    )
+    access_mode = models.CharField(
+        "Режим доступа",
+        max_length=55,
+        choices=ACCESS_MODE_CHOICES
+    )
+    url = models.URLField("URL ЭОР")
+    RESOURCE_STATE_CHOICES = (
+        ("Активный", "Активный"),
+        ("Архивный", "Архивный"),
+    )
+    resource_state = models.CharField(
+        "Состояние ЭОР",
+        max_length=8,
+        choices=RESOURCE_STATE_CHOICES,
+        default="Активный"
+    )
+    PASSPORT_STATE_CHOICES = (
+        ("Утвержден", "Утвержден"),
+        ("Не утвержден", "Не утвержден"),
+    )
+    passport_state = models.CharField(
+        "Состояние Паспорта ЭОР",
+        max_length=12,
+        choices=PASSPORT_STATE_CHOICES,
+        default="Не утвержден"
+    )
+    STAMP_STATE_CHOICES = (
+        ("Имеется", "Имеется"),
+        ("Отсутствует", "Отсутствует"),
+    )
+    stamp_state = models.CharField(
+        "Гриф ЭОР",
+        max_length=11,
+        choices=STAMP_STATE_CHOICES,
+        default="Отсутствует"
+    )
+    stamp_text = models.TextField("Текст Грифа ЭОР", blank=True, null=True)
+    stamp_date = models.DateField("Дата присвоения Грифа ЭОР", blank=True, null=True)
+    stamp_expiration = models.DateField("Дата истечения срока действия Грифа ЭОР", blank=True, null=True)
+    PUB_STATE_CHOICES = (
+        ("Является изданием", "Является изданием"),
+        ("Не является изданием", "Не является изданием"),
+    )
+    pub_state = models.CharField(
+        "Статус издания",
+        max_length=20,
+        choices=PUB_STATE_CHOICES,
+        default="Не является изданием"
+    )
+    pub_imprint = models.TextField("Выходные сведения издания", blank=True, null=True)
+    pub_isbn = models.CharField("ISBN издания", max_length=17, blank=True, null=True)
+    pub_regnum = models.CharField("Регистрационный номер издания", max_length=10, blank=True, null=True)
+    notes = models.TextField("Примечания (не публикуются в Паспорте ЭОР)", blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "ЭОР"
+        verbose_name_plural = "ЭОРы"
+
+
+class StampDirSubj(models.Model):
+    resource = models.ForeignKey(Resource, on_delete=models.PROTECT, verbose_name="ЭОР")
+    direction = models.ForeignKey(Direction, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Направление подготовки")
+    subject = models.ForeignKey(Subject, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Дисциплина")
+    module_code = models.CharField("Код модуля", max_length=7, blank=True, null=True)
+    percentage = models.PositiveSmallIntegerField("Процент соответствия")
 
     def __str__(self):
         return str(self.pk)
 
-    def get_absolute_url(self):
-        return reverse("core_StampSubject_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_StampSubject_update", args=(self.pk,))
+    class Meta:
+        verbose_name = "Соответвствие ЭОР дисциплинам"
+        verbose_name_plural = "Соответвствия ЭОР дисциплинам"
 
 
-class Competence(models.Model):
-    # Это справочник?
+class ResourceCompetence(models.Model):
+    resource = models.ForeignKey(Resource, on_delete=models.CASCADE, verbose_name="ЭОР")
+    competence = models.CharField("Формулировака компетенции", max_length=255)
 
-    stamp_subjects = models.ManyToManyField("core.StampSubject")
-    passport = models.ForeignKey("core.Passport", on_delete=models.CASCADE)
-
-    code = models.CharField("Код", max_length=8)
-    title = models.TextField("Наименование")
+    def __str__(self):
+        return self.competence
 
     class Meta:
-        pass
+        verbose_name = "Компетенция ЭОР"
+        verbose_name_plural = "Компетенции ЭОР"
+
+
+class Ums(models.Model):
+    name = models.CharField("Наименование УМС института", max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "УМС института"
+        verbose_name_plural = "УМС института"
+
+
+class Expertise(models.Model):
+    resource = models.ForeignKey(Resource, on_delete=models.PROTECT, verbose_name="ЭОР")
+    ums = models.ForeignKey(Ums, on_delete=models.PROTECT, verbose_name="УМС института", blank=True, null=True)
+    applicants = models.ManyToManyField("users.Person", verbose_name="Заявитель", blank=True, null=True)
+    applicant_contacts = models.TextField("Контактные данные заявителя", blank=True, null=True)
+    TYPE_CHOICES = (
+        ("Полная", "Полная"),
+        ("Расширение области применения", "Расширение области применения"),
+        ("Отзыв Грифа МС", "Отзыв Грифа МС"),
+    )
+    type = models.CharField("Вид экспертизы ЭОР", max_length=29, choices=TYPE_CHOICES)
+    application_date = models.DateField("Дата заявки", blank=True, null=True)
+    STATE_CHOICES = (
+        ("В процессе", "В процессе"),
+        ("Завершена (положительный результат)", "Завершена (положительный результат)"),
+        ("Завершена (отрицательный результат)", "Завершена (отрицательный результат)"),
+    )
+    state = models.CharField(
+        "Состояние экспертизы",
+        max_length=35,
+        choices=STATE_CHOICES,
+        default="В процессе"
+    )
+    notes = models.TextField("Примечания", blank=True, null=True)
+
+
+    def __str__(self):
+        return self.resource.title + " (" + self.type + ")"
+
+    class Meta:
+        verbose_name = "Экспертиза ЭОР"
+        verbose_name_plural = "Экспертизы ЭОР"
+
+
+class ExpertReportType(models.Model):
+    name = models.CharField("Наименование вида экспертного заключения", max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Вид экспертного заключения"
+        verbose_name_plural = "Виды экспертного заключения"
+
+
+class ExpertReport(models.Model):
+    expertise = models.ForeignKey(Expertise, on_delete=models.PROTECT, verbose_name="Экспертиза ЭОР")
+    type = models.ForeignKey(ExpertReportType, on_delete=models.PROTECT, verbose_name="Вид экспертного заключения")
+    expert = models.ForeignKey("users.Person", on_delete=models.PROTECT, verbose_name="Эксперт", blank=True, null=True)
+    expert_contacts = models.TextField("Контактные данные эксперта", blank=True, null=True)
+    report_pdf = models.FileField("Файл экспертного заключения в PDF", upload_to="upload/reports/", blank=True, null=True)
+    report_doc = models.FileField("Файл экспертного заключения в DOC", upload_to="upload/reports/", blank=True, null=True)
+    notes = models.TextField("Примечания", blank=True, null=True)
 
     def __str__(self):
         return str(self.pk)
 
-    def get_absolute_url(self):
-        return reverse("core_Competence_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_Competence_update", args=(self.pk,))
-
-
-class Stamp(models.Model):
-    text = models.TextField()
-    before_date = models.DateField()
-    state = models.BooleanField(default=False)
-
     class Meta:
-        pass
+        verbose_name = "Экспертное заключение"
+        verbose_name_plural = "Экспертные заключения"
 
-    def __str__(self):
-        return str(self.pk)
-
-    def get_absolute_url(self):
-        return reverse("core_Stamp_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_Stamp_update", args=(self.pk,))
-
-
-class Publication(models.Model):
-
-    passport = models.ForeignKey("core.Passport", on_delete=models.CASCADE)
-
-    state = models.BooleanField(default=False)
-    isbn = models.CharField("ISBN", max_length=18)
-    imprint = models.TextField("Выходные сведения")
-    reg_num = models.PositiveIntegerField("Регистрационный номер")
-
-    class Meta:
-        pass
-
-    def __str__(self):
-        return str(self.pk)
-
-    def get_absolute_url(self):
-        return reverse("core_Publication_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("core_Publication_update", args=(self.pk,))
