@@ -22,6 +22,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 
+from django.conf.urls.static import static
+
 urlpatterns = [
     path("users/", include("users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
@@ -29,7 +31,7 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path("test/", TemplateView.as_view(template_name="test.html")),
     path("", include("core.urls")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
     urlpatterns += [
         re_path(r"^static/(?P<path>.*)$", views.serve),

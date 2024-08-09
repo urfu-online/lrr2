@@ -45,7 +45,7 @@ class Language(models.Model):
 class Platform(models.Model):
     name = models.CharField("Наименование платформы", max_length=255)
     url = models.URLField("URL платформы")
-    logo = models.ImageField("Логотип платформы", upload_to="upload/images/platform_logo")
+    logo = models.ImageField("Логотип платформы", upload_to="platform_logo")
 
     def __str__(self):
         return self.name
@@ -78,7 +78,7 @@ class Rightholder(models.Model):
 
 
 class Resource(models.Model):
-    resource_code = models.CharField("Код ЭОР", max_length=8, unique=True)
+    resource_code = models.CharField("Код ЭОР", max_length=10, unique=True, blank=True, null=True)
     TYPE_CHOICES = (
         ("Электронный образовательный контент", "Электронный образовательный контент"),
         ("Электронный учебный курс", "Электронный учебный курс"),
@@ -94,13 +94,11 @@ class Resource(models.Model):
         Direction,
         verbose_name="Направления подготовки, для использования в рамках которых предназначен ЭОР",
         blank=True,
-        null=True
     )
     subjects = models.ManyToManyField(
         Subject,
         verbose_name="Дисциплины (модули), для использования в рамках которых предназначен ЭОР",
         blank=True,
-        null=True
     )
     structure = models.TextField("Перчень разделов (тем) ЭОР", blank=True, null=True)
     INTERACTIVE_CHOICES = (
@@ -221,7 +219,7 @@ class StampDirSubj(models.Model):
 
 class ResourceCompetence(models.Model):
     resource = models.ForeignKey(Resource, on_delete=models.CASCADE, verbose_name="ЭОР")
-    competence = models.CharField("Формулировака компетенции", max_length=255)
+    competence = models.TextField("Формулировака компетенции")
 
     def __str__(self):
         return self.competence
@@ -245,8 +243,9 @@ class Ums(models.Model):
 class Expertise(models.Model):
     resource = models.ForeignKey(Resource, on_delete=models.PROTECT, verbose_name="ЭОР")
     ums = models.ForeignKey(Ums, on_delete=models.PROTECT, verbose_name="УМС института", blank=True, null=True)
-    applicants = models.ManyToManyField("users.Person", verbose_name="Заявитель", blank=True, null=True)
+    applicants = models.ManyToManyField("users.Person", verbose_name="Заявитель", blank=True)
     applicant_contacts = models.TextField("Контактные данные заявителя", blank=True, null=True)
+    expert_access_details = models.TextField("Режим доступа к ЭОР для эксперта", blank=True, null=True)
     TYPE_CHOICES = (
         ("Полная", "Полная"),
         ("Расширение области применения", "Расширение области применения"),
@@ -292,8 +291,8 @@ class ExpertReport(models.Model):
     type = models.ForeignKey(ExpertReportType, on_delete=models.PROTECT, verbose_name="Вид экспертного заключения")
     expert = models.ForeignKey("users.Person", on_delete=models.PROTECT, verbose_name="Эксперт", blank=True, null=True)
     expert_contacts = models.TextField("Контактные данные эксперта", blank=True, null=True)
-    report_pdf = models.FileField("Файл экспертного заключения в PDF", upload_to="upload/reports/", blank=True, null=True)
-    report_doc = models.FileField("Файл экспертного заключения в DOC", upload_to="upload/reports/", blank=True, null=True)
+    report_pdf = models.FileField("Файл экспертного заключения в PDF", upload_to="reports", blank=True, null=True)
+    report_doc = models.FileField("Файл экспертного заключения в DOC", upload_to="reports", blank=True, null=True)
     notes = models.TextField("Примечания", blank=True, null=True)
 
     def __str__(self):
