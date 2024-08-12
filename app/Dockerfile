@@ -8,15 +8,17 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-# RUN <<EOF
-# apt-get update
-# apt-get install -y --no-install-recommends gettext
-# EOF
+RUN <<EOF
+apt-get update
+apt-get install -y --no-install-recommends make
+apt-get clean && rm -rf /tmp/* /var/tmp/*
+EOF
 
 RUN python -m pip install --upgrade pip
 
-COPY requirements.txt requirements.txt
-RUN python -m pip install -r requirements.txt --no-cache-dir
+COPY requirements requirements
+COPY Makefile Makefile
+RUN python -m pip install -r requirements/pip-tools.txt --no-cache-dir
+RUN make dev-requirements
 
 COPY . .
-

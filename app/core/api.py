@@ -1,6 +1,16 @@
+import orjson
 from ninja import NinjaAPI
+from ninja.renderers import BaseRenderer
 
-api = NinjaAPI()
+
+class ORJSONRenderer(BaseRenderer):
+    media_type = "application/json"
+
+    def render(self, request, data, *, response_status):
+        return orjson.dumps(data)
+
+api = NinjaAPI(renderer=ORJSONRenderer())
+
 
 @api.get("/hello")
 def hello(request):
