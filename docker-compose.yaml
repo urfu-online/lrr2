@@ -54,11 +54,43 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data/
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-q",
+          "-d",
+          "${POSTGRES_DB}",
+          "-U",
+          "${POSTGRES_USER}"
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 5s
+
+  pgbackups:
+    image: prodrigestivill/postgres-backup-local
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - ./${BACKUP_DIR}:/backups
+    links:
+      - postgres:postgres
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=${BACKUP_SCHEDULE}
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=${BACKUP_HEALTHCHECK_PORT}
 
   redis:
     restart: unless-stopped
