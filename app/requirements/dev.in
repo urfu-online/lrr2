@@ -1,0 +1,9 @@
+-c constraints.txt
+
+-r pip-tools.txt
+-r base.txt
+
+watchgod
+Werkzeug
+django-debug-toolbar
+django-extensions
