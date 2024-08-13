@@ -2,6 +2,10 @@ import orjson
 from ninja import NinjaAPI
 from ninja.renderers import BaseRenderer
 
+from . import models
+from ninja import ModelSchema, Schema, Field
+from typing import List
+
 
 class ORJSONRenderer(BaseRenderer):
     media_type = "application/json"
@@ -10,21 +14,7 @@ class ORJSONRenderer(BaseRenderer):
         return orjson.dumps(data)
 
 api = NinjaAPI(renderer=ORJSONRenderer())
-
-
-@api.get("/hello")
-def hello(request):
-    return "Hello world"
-
-@api.get("/math")
-def math(request, a: int, b: int):
-    return {"add": a + b, "multiply": a * b}
-from . import models
-from ninja import ModelSchema, Schema, Field
-from typing import List
-
-api = NinjaAPI(docs_url=None)
-
+# api = NinjaAPI(docs_url=None)
 
 class PlatformSchema(ModelSchema):
     class Meta:
@@ -63,37 +53,3 @@ class ModuleResourceApplicationUniExportSchema(Schema):
 def module_resource_appl_uni_export(request):
     qs = models.ResourceStampApplication.objects.all()
     return qs
-
-
-
-# class DepartmentUniExportSchema(Schema):
-#     name: str
-
-# class PlatformUniExportSchema(Schema):
-#     name: str
-
-# class ModuleUniExportSchema(Schema):
-#     module_code: str
-
-# class ResourceStampModuleUniExportSchema(Schema):
-#     id: int
-#     # module_code: str = Field(..., alias="module.module_code")
-
-# class ResourceUniExportSchema(Schema):
-#     # resource_code: str
-#     title: str
-#     credits: int
-#     department_name: str = Field(..., alias="department.name")
-#     url: str
-#     platform_name: str = Field(..., alias="platform.name")
-#     stamp_applications: List[ModuleUniExportSchema]
-
-# @api.get("/resources_uni_export", response=List[ResourceUniExportSchema])
-# def resources_uni_export(request):
-#     qs = models.Resource.objects.all()
-#     return qs
-
-# @api.get("/stamp_modules_uni_export", response=List[ResourceStampModuleUniExportSchema])
-# def stamp_modules_uni_export(request):
-#     qs = models.ResourceStampModule.objects.all()
-#     return qs
