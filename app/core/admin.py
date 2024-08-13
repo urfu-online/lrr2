@@ -19,17 +19,17 @@ class ResourceCompetenceInLine(admin.TabularInline):
     model = models.ResourceCompetence
     extra = 0
 
-class StampDirSubjInLine(admin.TabularInline):
-    model = models.StampDirSubj
-    extra = 0
-
 class ExpertiseInLine(admin.StackedInline):
     model = models.Expertise
     extra = 0
     filter_horizontal = ['applicants']
 
+class ResourceStampApplicationInLine(admin.TabularInline):
+    model = models.ResourceStampApplication
+    extra = 0
+
 class ResourceAdmin(admin.ModelAdmin):
-    inlines = (ResourceCompetenceInLine, StampDirSubjInLine, ExpertiseInLine, )
+    inlines = (ResourceCompetenceInLine, ExpertiseInLine, ResourceStampApplicationInLine)
     filter_horizontal = ['directions', 'subjects']
 
 admin.site.register(models.Resource, ResourceAdmin)

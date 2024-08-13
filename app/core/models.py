@@ -13,7 +13,11 @@ class Direction(models.Model):
     degree = models.CharField("Уровень образования направления подготовки", max_length=12, choices=DEGREES_CHOICES)
 
     def __str__(self):
-        return (self.code + " " + self.name + " (" + self.degree + ")").strip()
+        if self.code:
+            code = self.code
+        else:
+            code = ""
+        return (code + " " + self.name + " (" + self.degree + ")").strip()
 
     class Meta:
         verbose_name = "Направление подготовки"
@@ -202,21 +206,6 @@ class Resource(models.Model):
         verbose_name_plural = "ЭОРы"
 
 
-class StampDirSubj(models.Model):
-    resource = models.ForeignKey(Resource, on_delete=models.PROTECT, verbose_name="ЭОР")
-    direction = models.ForeignKey(Direction, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Направление подготовки")
-    subject = models.ForeignKey(Subject, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Дисциплина")
-    module_code = models.CharField("Код модуля", max_length=7, blank=True, null=True)
-    percentage = models.PositiveSmallIntegerField("Процент соответствия")
-
-    def __str__(self):
-        return str(self.pk)
-
-    class Meta:
-        verbose_name = "Соответвствие ЭОР дисциплинам"
-        verbose_name_plural = "Соответвствия ЭОР дисциплинам"
-
-
 class ResourceCompetence(models.Model):
     resource = models.ForeignKey(Resource, on_delete=models.CASCADE, verbose_name="ЭОР")
     competence = models.TextField("Формулировака компетенции")
@@ -273,6 +262,28 @@ class Expertise(models.Model):
     class Meta:
         verbose_name = "Экспертиза ЭОР"
         verbose_name_plural = "Экспертизы ЭОР"
+
+
+class ResourceStampApplication(models.Model):
+    resource = models.ForeignKey(Resource, on_delete=models.PROTECT, verbose_name="ЭОР")
+    direction = models.ForeignKey(Direction, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Направление подготовки")
+    subject = models.ForeignKey(Subject, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Дисциплина")
+    module_code = models.CharField("Код модуля", max_length=7, blank=True, null=True)
+    percentage = models.PositiveSmallIntegerField("Процент соответствия")
+    expertise = models.ForeignKey(Expertise, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Экспертиза ЭОР")
+
+    def application_models(self):
+        if self.percentage >= 100 and self.resource.interactive == "Все интерактивные компоненты автоматизированы":
+            return ["Модель 1", "Модель 2"]
+        else:
+            return ["Модель 3", "Модель 4"]
+
+    def __str__(self):
+        return str(self.pk)
+
+    class Meta:
+        verbose_name = "Соответвствие ЭОР направлению, дисциплине и модулю, установленное Грифом ЭОР"
+        verbose_name_plural = "Соответвствия ЭОР направлениям, дисциплинам и модулям, установленные Грифом ЭОР"
 
 
 class ExpertReportType(models.Model):
