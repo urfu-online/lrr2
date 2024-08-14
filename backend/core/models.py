@@ -8,9 +8,16 @@ class Direction(models.Model):
         ("магистратура", "магистратура"),
         ("аспирантура", "аспирантура"),
     )
-    code = models.CharField("Код направления подготовки", max_length=8, blank=True, null=True)
+    code = models.CharField("Код направления подготовки", max_length=8, blank=True)
     name = models.CharField("Наименование направления подготовки", max_length=255)
     degree = models.CharField("Уровень образования направления подготовки", max_length=12, choices=DEGREES_CHOICES)
+
+    def merged_name(self):
+        if self.code:
+            code = self.code
+        else:
+            code = ""
+        return (code + " " + self.name + " (" + self.degree + ")").strip()
 
     def __str__(self):
         if self.code:
@@ -82,7 +89,7 @@ class Rightholder(models.Model):
 
 
 class Resource(models.Model):
-    resource_code = models.CharField("Код ЭОР", max_length=10, unique=True, blank=True, null=True)
+    resource_code = models.CharField("Код ЭОР", max_length=10, unique=True, blank=True)
     TYPE_CHOICES = (
         ("Электронный образовательный контент", "Электронный образовательный контент"),
         ("Электронный учебный курс", "Электронный учебный курс"),
@@ -92,8 +99,8 @@ class Resource(models.Model):
     title = models.TextField("Наименование ЭОР")
     authors_text = models.TextField("Авторы ЭОР")
     description = models.TextField("Аннотация ЭОР")
-    prerequisites = models.TextField("Пререквизиты ЭОР", blank=True, null=True)
-    target = models.TextField("Целевая аудитория ЭОР", blank=True, null=True)
+    prerequisites = models.TextField("Пререквизиты ЭОР", blank=True)
+    target = models.TextField("Целевая аудитория ЭОР", blank=True)
     directions = models.ManyToManyField(
         Direction,
         verbose_name="Направления подготовки, для использования в рамках которых предназначен ЭОР",
@@ -104,7 +111,7 @@ class Resource(models.Model):
         verbose_name="Дисциплины (модули), для использования в рамках которых предназначен ЭОР",
         blank=True,
     )
-    structure = models.TextField("Перчень разделов (тем) ЭОР", blank=True, null=True)
+    structure = models.TextField("Перчень разделов (тем) ЭОР", blank=True)
     INTERACTIVE_CHOICES = (
         ("Все интерактивные компоненты автоматизированы", "Все интерактивные компоненты автоматизированы"),
         ("Некоторые интерактивные компоненты требуют участия преподавателя", "Некоторые интерактивные компоненты требуют участия преподавателя"),
@@ -115,13 +122,13 @@ class Resource(models.Model):
         max_length=64,
         choices=INTERACTIVE_CHOICES
     )
-    keywords = models.TextField("Ключевые слова", blank=True, null=True)
-    results = models.TextField("Результаты освоения ЭОР", blank=True, null=True)
+    keywords = models.TextField("Ключевые слова", blank=True)
+    results = models.TextField("Результаты освоения ЭОР", blank=True)
     credits = models.PositiveSmallIntegerField("Трудоемкость освоения ЭОР", blank=True, null=True)
     language = models.ForeignKey(
         Language, verbose_name="Язык контента ЭОР", on_delete=models.PROTECT, blank=True, null=True
     )
-    requirements = models.TextField("Минимальные системные требования", blank=True, null=True)
+    requirements = models.TextField("Минимальные системные требования", blank=True)
     rightholder = models.ForeignKey(
         Rightholder, verbose_name="Правообладатель ЭОР", on_delete=models.PROTECT
     )
@@ -132,7 +139,7 @@ class Resource(models.Model):
         blank=True,
         null=True
     )
-    contacts = models.TextField("Контактные данные ответственного лица", blank=True, null=True)
+    contacts = models.TextField("Контактные данные ответственного лица", blank=True)
     platform = models.ForeignKey(
         Platform,
         verbose_name="Платформа размещения ЭОР",
@@ -180,7 +187,7 @@ class Resource(models.Model):
         choices=STAMP_STATE_CHOICES,
         default="Отсутствует"
     )
-    stamp_text = models.TextField("Текст Грифа ЭОР", blank=True, null=True)
+    stamp_text = models.TextField("Текст Грифа ЭОР", blank=True)
     stamp_date = models.DateField("Дата присвоения Грифа ЭОР", blank=True, null=True)
     stamp_expiration = models.DateField("Дата истечения срока действия Грифа ЭОР", blank=True, null=True)
     PUB_STATE_CHOICES = (
@@ -193,10 +200,10 @@ class Resource(models.Model):
         choices=PUB_STATE_CHOICES,
         default="Не является изданием"
     )
-    pub_imprint = models.TextField("Выходные сведения издания", blank=True, null=True)
-    pub_isbn = models.CharField("ISBN издания", max_length=17, blank=True, null=True)
-    pub_regnum = models.CharField("Регистрационный номер издания", max_length=10, blank=True, null=True)
-    notes = models.TextField("Примечания (не публикуются в Паспорте ЭОР)", blank=True, null=True)
+    pub_imprint = models.TextField("Выходные сведения издания", blank=True)
+    pub_isbn = models.CharField("ISBN издания", max_length=17, blank=True)
+    pub_regnum = models.CharField("Регистрационный номер издания", max_length=10, blank=True)
+    notes = models.TextField("Примечания (не публикуются в Паспорте ЭОР)", blank=True)
 
     def __str__(self):
         return self.title
