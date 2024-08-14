@@ -206,7 +206,7 @@ class Resource(models.Model):
     notes = models.TextField("Примечания (не публикуются в Паспорте ЭОР)", blank=True)
 
     def __str__(self):
-        return self.title
+        return self.resource_code + " " + self.title
 
     class Meta:
         verbose_name = "ЭОР"

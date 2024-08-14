@@ -24,7 +24,7 @@ class ExpertiseInLine(admin.StackedInline):
     extra = 0
     filter_horizontal = ['applicants']
 
-class ResourceStampApplicationInLine(admin.TabularInline):
+class ResourceStampApplicationInLine(admin.StackedInline):
     model = models.ResourceStampApplication
     extra = 0
 
