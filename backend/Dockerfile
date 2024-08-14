@@ -17,8 +17,11 @@ EOF
 RUN python -m pip install --upgrade pip
 
 COPY requirements requirements
-COPY Makefile Makefile
-RUN python -m pip install -r requirements/pip-tools.txt --no-cache-dir
-RUN make dev-requirements
+
+RUN python -m pip install -r requirements/dev.txt --no-cache-dir
+
+# COPY Makefile Makefile
+# RUN python -m pip install -r requirements/pip-tools.txt --no-cache-dir
+# RUN make dev-requirements
 
 COPY . .
