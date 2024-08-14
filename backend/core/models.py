@@ -240,8 +240,8 @@ class Expertise(models.Model):
     resource = models.ForeignKey(Resource, on_delete=models.PROTECT, verbose_name="ЭОР")
     ums = models.ForeignKey(Ums, on_delete=models.PROTECT, verbose_name="УМС института", blank=True, null=True)
     applicants = models.ManyToManyField("users.Person", verbose_name="Заявитель", blank=True)
-    applicant_contacts = models.TextField("Контактные данные заявителя", blank=True, null=True)
-    expert_access_details = models.TextField("Режим доступа к ЭОР для эксперта", blank=True, null=True)
+    applicant_contacts = models.TextField("Контактные данные заявителя", blank=True)
+    expert_access_details = models.TextField("Режим доступа к ЭОР для эксперта", blank=True)
     TYPE_CHOICES = (
         ("Полная", "Полная"),
         ("Расширение области применения", "Расширение области применения"),
@@ -260,7 +260,7 @@ class Expertise(models.Model):
         choices=STATE_CHOICES,
         default="В процессе"
     )
-    notes = models.TextField("Примечания", blank=True, null=True)
+    notes = models.TextField("Примечания", blank=True)
 
 
     def __str__(self):
@@ -275,7 +275,7 @@ class ResourceStampApplication(models.Model):
     resource = models.ForeignKey(Resource, on_delete=models.PROTECT, verbose_name="ЭОР")
     direction = models.ForeignKey(Direction, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Направление подготовки")
     subject = models.ForeignKey(Subject, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Дисциплина")
-    module_code = models.CharField("Код модуля", max_length=7, blank=True, null=True)
+    module_code = models.CharField("Код модуля", max_length=7, blank=True)
     percentage = models.PositiveSmallIntegerField("Процент соответствия")
     expertise = models.ForeignKey(Expertise, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Экспертиза ЭОР")
 
@@ -308,10 +308,10 @@ class ExpertReport(models.Model):
     expertise = models.ForeignKey(Expertise, on_delete=models.PROTECT, verbose_name="Экспертиза ЭОР")
     type = models.ForeignKey(ExpertReportType, on_delete=models.PROTECT, verbose_name="Вид экспертного заключения")
     expert = models.ForeignKey("users.Person", on_delete=models.PROTECT, verbose_name="Эксперт", blank=True, null=True)
-    expert_contacts = models.TextField("Контактные данные эксперта", blank=True, null=True)
+    expert_contacts = models.TextField("Контактные данные эксперта", blank=True)
     report_pdf = models.FileField("Файл экспертного заключения в PDF", upload_to="reports", blank=True, null=True)
     report_doc = models.FileField("Файл экспертного заключения в DOC", upload_to="reports", blank=True, null=True)
-    notes = models.TextField("Примечания", blank=True, null=True)
+    notes = models.TextField("Примечания", blank=True)
 
     def __str__(self):
         return str(self.pk)
