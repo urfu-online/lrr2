@@ -18,10 +18,11 @@ class ORJSONRenderer(BaseRenderer):
 api = NinjaAPI(renderer=ORJSONRenderer(), docs_url=None)
 
 
-class DepartmentSchema(ModelSchema):
-    class Meta:
-        model = models.Department
-        fields = "__all__"
+class DepartmentSchema(Schema):
+    id: int
+    name: str
+    value: str = Field(..., alias="name")
+    label: str = Field(..., alias="name")
 
 @api.get("/departments", response=List[DepartmentSchema])
 def departments(request):
@@ -35,6 +36,8 @@ class DirectionSchema(Schema):
     name: str
     degree: str
     merged_name: str
+    value: str = Field(..., alias="merged_name")
+    label: str = Field(..., alias="merged_name")
 
 @api.get("/directions", response=List[DirectionSchema])
 def directions(request):
@@ -42,10 +45,13 @@ def directions(request):
     return qs
 
 
-class PlatformSchema(ModelSchema):
-    class Meta:
-        model = models.Platform
-        fields = "__all__"
+class PlatformSchema(Schema):
+    id: int
+    name: str
+    url: str
+    logo: str
+    value: str = Field(..., alias="name")
+    label: str = Field(..., alias="name")
 
 @api.get("/platforms", response=List[PlatformSchema])
 def platforms(request):
@@ -53,26 +59,30 @@ def platforms(request):
     return qs
 
 
-class ResourceCompetenceSchema(Schema):
-    resource_id: int = Field(..., alias="resource.pk")
-    competence: str
-
-@api.get("/resource_competences", response=List[ResourceCompetenceSchema])
-def resource_competences(request):
-    qs = models.ResourceCompetence.objects.all()
-    return qs
-
-
-class SubjectSchema(ModelSchema):
-    class Meta:
-        model = models.Subject
-        fields = "__all__"
+class SubjectSchema(Schema):
+    id: int
+    name: str
+    value: str = Field(..., alias="name")
+    label: str = Field(..., alias="name")
 
 @api.get("/subjects", response=List[SubjectSchema])
 def subjects(request):
     qs = models.Subject.objects.all()
     return qs
 
+
+class CompetenceSchema(Schema):
+    name: str
+
+class LanguageSchema(ModelSchema):
+    class Meta:
+        model = models.Language
+        fields = "__all__"
+
+class RightholderSchema(ModelSchema):
+    class Meta:
+        model = models.Rightholder
+        fields = "__all__"
 
 class ResourceSchema(Schema):
     id: int
@@ -85,17 +95,18 @@ class ResourceSchema(Schema):
     target: str
     directions: List[DirectionSchema]
     subjects: List[SubjectSchema]
+    competences: List[CompetenceSchema]
     structure: str
     interactive: str
     keywords: str
     results: str
     credits: int
-    language_name: str = Field(..., alias="language.name")
+    language: LanguageSchema
     requirements: str
-    rightholder_name: str = Field(..., alias="rightholder.name")
-    department_id: int = Field(..., alias="department.pk")
+    rightholder: RightholderSchema
+    department: DepartmentSchema
     contacts: str
-    platform_id: int = Field(..., alias="platform.pk")
+    platform: PlatformSchema
     access_mode: str
     url: str
     resource_state: str
@@ -116,8 +127,8 @@ def resources(request):
 
 class ResourceStampApplicationSchema(Schema):
     resource_id: int = Field(..., alias="resource.pk")
-    direction_id: int= Field(..., alias="direction.pk")
-    subject_id: int= Field(..., alias="subject.pk")
+    direction: DirectionSchema
+    subject: SubjectSchema
     module_code: str
     percentage: int
     
@@ -127,18 +138,18 @@ def resource_stamp_applications(request):
     return qs
 
 
-class ModuleResourceApplicationUniExportSchema(Schema):
-    module_code: str
+class ResourceApplicationUniExportSchema(Schema):
     resource_type: str = Field(..., alias="resource.type")
     resource_title: str = Field(..., alias="resource.title")
     resource_credits: int = Field(..., alias="resource.credits")
     resource_department_name: str = Field(..., alias="resource.department.name")
     resource_url: str = Field(..., alias="resource.url")
     resource_platform_name: str = Field(..., alias="resource.platform.name")
+    module_code: str
     subject_name: str = Field(..., alias="subject.name")
     application_models: List[str]
 
-@api.get("/module_resource_appl_uni_export", response=List[ModuleResourceApplicationUniExportSchema])
-def module_resource_appl_uni_export(request):
+@api.get("/resource_application_uni_export", response=List[ResourceApplicationUniExportSchema])
+def resource_application_uni_export(request):
     qs = models.ResourceStampApplication.objects.all()
     return qs

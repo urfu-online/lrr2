@@ -13,11 +13,8 @@ admin.site.register(models.Ums)
 admin.site.register(models.ExpertReportType)
 
 admin.site.register(models.ExpertReport)
+admin.site.register(models.Competence)
 
-
-class ResourceCompetenceInLine(admin.TabularInline):
-    model = models.ResourceCompetence
-    extra = 0
 
 class ExpertiseInLine(admin.StackedInline):
     model = models.Expertise
@@ -29,8 +26,8 @@ class ResourceStampApplicationInLine(admin.StackedInline):
     extra = 0
 
 class ResourceAdmin(admin.ModelAdmin):
-    inlines = (ResourceCompetenceInLine, ExpertiseInLine, ResourceStampApplicationInLine)
-    filter_horizontal = ['directions', 'subjects']
+    inlines = (ExpertiseInLine, ResourceStampApplicationInLine)
+    filter_horizontal = ['directions', 'subjects', 'competences']
 
 admin.site.register(models.Resource, ResourceAdmin)
 

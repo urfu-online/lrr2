@@ -88,6 +88,17 @@ class Rightholder(models.Model):
         verbose_name_plural = "Правообладатели"
 
 
+class Competence(models.Model):
+    name = models.TextField("Наименование компетенции")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Компетенция"
+        verbose_name_plural = "Компетенции"
+
+
 class Resource(models.Model):
     resource_code = models.CharField("Код ЭОР", max_length=10, unique=True, blank=True)
     TYPE_CHOICES = (
@@ -109,6 +120,11 @@ class Resource(models.Model):
     subjects = models.ManyToManyField(
         Subject,
         verbose_name="Дисциплины (модули), для использования в рамках которых предназначен ЭОР",
+        blank=True,
+    )
+    competences = models.ManyToManyField(
+        Competence,
+        verbose_name="Компетенции, в формировании которых участвует ЭОР",
         blank=True,
     )
     structure = models.TextField("Перчень разделов (тем) ЭОР", blank=True)
@@ -213,18 +229,6 @@ class Resource(models.Model):
         verbose_name_plural = "ЭОРы"
 
 
-class ResourceCompetence(models.Model):
-    resource = models.ForeignKey(Resource, on_delete=models.CASCADE, verbose_name="ЭОР")
-    competence = models.TextField("Формулировака компетенции")
-
-    def __str__(self):
-        return self.competence
-
-    class Meta:
-        verbose_name = "Компетенция ЭОР"
-        verbose_name_plural = "Компетенции ЭОР"
-
-
 class Ums(models.Model):
     name = models.CharField("Наименование УМС института", max_length=255)
 
@@ -281,9 +285,9 @@ class ResourceStampApplication(models.Model):
 
     def application_models(self):
         if self.percentage >= 100 and self.resource.interactive == "Все интерактивные компоненты автоматизированы":
-            return ["Модель 1", "Модель 2"]
+            return ["Модель 2", "Модель 3"]
         else:
-            return ["Модель 3", "Модель 4"]
+            return ["Модель 1", "Модель 4", "Модель 5"]
 
     def __str__(self):
         return str(self.pk)

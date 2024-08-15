@@ -27,8 +27,8 @@ SECRET_KEY = "django-insecure-4lmju79-u%v@rqp#b6p&$k&xw1cp_g+*&_e5xoqndn-da59ip8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "http://localhost:8088"]
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8088", "http://127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "http://localhost:8088", "lrr2.urfu.online", "http://lrr2.urfu.online:8088"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8088", "http://127.0.0.1", "http://lrr2.urfu.online:8088"]
 if DEBUG:
     import socket  # only if you haven't already imported this
 
